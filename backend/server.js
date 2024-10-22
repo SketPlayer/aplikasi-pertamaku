@@ -14,25 +14,38 @@ app.use(cors({
 
 const connection = new sqlite3.Database('./db/aplikasi.db')
 
+// Parameterized query to get user info
 app.get('/api/user/:id', (req, res) => {
-  const query = `SELECT * FROM users WHERE id = ${req.params.id}`;
-  console.log(query)
-  connection.all(query, (error, results) => {
-    if (error) throw error;
+  const userId = req.params.id;
+  const query = `SELECT * FROM users WHERE id = ?`;
+
+  connection.all(query, [userId], (error, results) => {
+    if (error) {
+      res.status(500).send('Database error');
+      return;
+    }
     res.json(results);
   });
 });
 
+// Parameterized query to change email
 app.post('/api/user/:id/change-email', (req, res) => {
   const newEmail = req.body.email;
-  const query = `UPDATE users SET email = '${newEmail}' WHERE id = ${req.params.id}`;
+  const userId = req.params.id;
 
-  connection.run(query, function (err) {
-    if (err) throw err;
-    if (this.changes === 0 ) res.status(404).send('User not found');
-    else res.status(200).send('Email updated successfully');
+  const query = `UPDATE users SET email = ? WHERE id = ?`;
+
+  connection.run(query, [newEmail, userId], function (err) {
+    if (err) {
+      res.status(500).send('Database error');
+      return;
+    }
+    if (this.changes === 0) {
+      res.status(404).send('User not found');
+    } else {
+      res.status(200).send('Email updated successfully');
+    }
   });
-
 });
 
 app.get('/api/file', (req, res) => {
