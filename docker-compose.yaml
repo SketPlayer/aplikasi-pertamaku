@@ -1,13 +1,4 @@
 services:
-  frontend:
-    build: 
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    environment:
-      - VITE_SUBDOMAIN=rio_ferdinan
-
   backend:
     build:
       context: ./backend
@@ -18,3 +9,20 @@ services:
       - API_BASE_URL=/api
     volumes:
       - ./backend/db:/usr/src/app/db
+    networks:
+      - myNetwork
+
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - VITE_SUBDOMAIN=rio_ferdinan
+    networks:
+      - myNetwork
+
+networks:
+  myNetwork:
+    driver: bridge
