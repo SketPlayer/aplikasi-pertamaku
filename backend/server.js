@@ -6,6 +6,7 @@ import cors from 'cors';
 
 const app = express();
 app.use(express.json())
+app.use(express.urlencoded({ extended: true })); // Added this line
 app.use(cors({
   origin: '*',
   optionsSuccessStatus: 200,
