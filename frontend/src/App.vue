@@ -7,12 +7,12 @@ const users = ref(null);
 const newEmail = ref('');
 
 const getUser = async () => {
-  const response = await fetch(`http://localhost:3000/api/user/${userId.value}`);
+  const response = await fetch(`http://20.5.130.115:3000/api/user/${userId.value}`);
   users.value = await response.json();
 };
 
 const changeEmail = async () => {
-  await fetch('http://localhost:3000/api/change-email', {
+  await fetch('http://20.5.130.115:3000/api/change-email', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
