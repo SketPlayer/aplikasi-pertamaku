@@ -1,0 +1,27 @@
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - VITE_SUBDOMAIN=rio_ferdinan
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - API_BASE_URL=/api
+    volumes:
+      - ./backend/db:/usr/src/app/db
+    depends_on:
+      - db
+
+volumes:
+  db:
