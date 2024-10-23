@@ -39,6 +39,7 @@ const changeEmail = async () => {
       'CSRF-Token': token,  // Include the CSRF token in headers
     },
     body: `email=${newEmail.value}`,
+    credentials: 'include', // Include cookies in the request
   });
 };
 </script>

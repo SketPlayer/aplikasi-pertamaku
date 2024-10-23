@@ -11,6 +11,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true })); // Added this line
 app.use(cors({
   origin: '*',
+  credentials: true, // Enable cookies to be sent with requests
   optionsSuccessStatus: 200,
 }));
 
