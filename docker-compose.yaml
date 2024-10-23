@@ -21,6 +21,7 @@ services:
       - "443:443"
     environment:
       - VITE_SUBDOMAIN=rio_ferdinan
+      - VITE_API_BASE_URL=https://20.5.130.115/api
     networks:
       - myNetwork
 
