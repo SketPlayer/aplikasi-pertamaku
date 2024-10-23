@@ -3,8 +3,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import sqlite3 from 'sqlite3';
 import cors from 'cors';
-import https from 'https'; // Import HTTPS module
-import fs from 'fs'; // Import file system module
+import https from 'https';
+import fs from 'fs';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 app.use(express.json())
@@ -13,6 +14,14 @@ app.use(cors({
   origin: 'https://20.5.130.115', // Change the origin
   optionsSuccessStatus: 200,
 }));
+
+// Apply rate limiting to all requests
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+});
+app.use(limiter); // Apply rate limiter to all routes
 
 const connection = new sqlite3.Database('./db/aplikasi.db')
 
