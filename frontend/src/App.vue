@@ -8,8 +8,11 @@ const newEmail = ref('');
 
 const getUser = async () => {
   const response = await fetch(`http://20.5.130.115:3000/api/user/${userId.value}`);
-  users.value = await response.json();
+  const data = await response.json();
+  users.value = data.users; // Make sure this is an array
+  csrfToken.value = data.csrfToken; // Also store the CSRF token
 };
+
 
 // Function to get CSRF token from cookies
 function getCSRFToken() {
