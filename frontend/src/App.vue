@@ -11,11 +11,27 @@ const getUser = async () => {
   users.value = await response.json();
 };
 
+// Function to get CSRF token from cookies
+function getCSRFToken() {
+  const name = 'csrf-token=';
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const cookieArr = decodedCookie.split(';');
+  for (let i = 0; i < cookieArr.length; i++) {
+    let cookie = cookieArr[i].trim();
+    if (cookie.indexOf(name) === 0) {
+      return cookie.substring(name.length, cookie.length);
+    }
+  }
+  return '';
+}
+
 const changeEmail = async () => {
+  const csrfToken = getCSRFToken();  // Retrieve CSRF token from cookies
   await fetch(`http://20.5.130.115:3000/api/user/${userId.value}/change-email`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
+      'CSRF-Token': csrfToken  // Include CSRF token in headers
     },
     body: `email=${newEmail.value}`,
   });

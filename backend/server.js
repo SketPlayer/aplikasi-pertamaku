@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import sqlite3 from 'sqlite3';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import csurf from 'csurf';
 
 const app = express();
 app.use(express.json())
@@ -12,10 +14,15 @@ app.use(cors({
   optionsSuccessStatus: 200,
 }));
 
+// Cookie parser middleware for CSRF tokens in cookies
+app.use(cookieParser());
+// Set up CSRF protection
+const csrfProtection = csurf({ cookie: true });
+
 const connection = new sqlite3.Database('./db/aplikasi.db')
 
 // Parameterized query to get user info
-app.get('/api/user/:id', (req, res) => {
+app.get('/api/user/:id', csrfProtection, (req, res) => {
   const userId = req.params.id;
   const query = `SELECT * FROM users WHERE id = ?`;
 
@@ -24,12 +31,13 @@ app.get('/api/user/:id', (req, res) => {
       res.status(500).send('Database error');
       return;
     }
-    res.json(results);
+    // Include CSRF token in the response
+    res.json({ users: results, csrfToken: req.csrfToken() });
   });
 });
 
 // Parameterized query to change email
-app.post('/api/user/:id/change-email', (req, res) => {
+app.post('/api/user/:id/change-email', csrfProtection, (req, res) => {
   const newEmail = req.body.email;
   const userId = req.params.id;
 
