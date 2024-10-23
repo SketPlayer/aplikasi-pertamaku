@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })); // Added this line
 app.use(cors({
-  origin: '*',
+  origin: 'https://20.5.130.115', // Change the origin
   optionsSuccessStatus: 200,
 }));
 
