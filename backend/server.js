@@ -3,6 +3,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import sqlite3 from 'sqlite3';
 import cors from 'cors';
+import https from 'https'; // Import HTTPS module
+import fs from 'fs'; // Import file system module
 
 const app = express();
 app.use(express.json())
@@ -13,6 +15,12 @@ app.use(cors({
 }));
 
 const connection = new sqlite3.Database('./db/aplikasi.db')
+
+// Load SSL certificates
+const options = {
+  key: fs.readFileSync('/etc/ssl/private/privkey.pem'),
+  cert: fs.readFileSync('/etc/ssl/certs/fullchain.pem'),
+};
 
 // Parameterized query to get user info
 app.get('/api/user/:id', (req, res) => {
@@ -56,6 +64,6 @@ app.get('/api/file', (req, res) => {
   res.sendFile(filePath);
 });
 
-app.listen(3000, () => {
+https.createServer(options, app).listen(3000, () => {
   console.log('Server running on port 3000');
 });
