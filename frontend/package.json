@@ -11,7 +11,8 @@
   "dependencies": {
     "vue": "^3.4.37",
     "dompurify": "^2.3.3",
-    "csurf": "^1.11.0"
+    "csurf": "^1.11.0",
+    "cookie-parser": "^1.4.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",
