@@ -23,8 +23,11 @@ COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 COPY ./certs/fullchain.pem /etc/ssl/certs/fullchain.pem
 COPY ./certs/privkey.pem /etc/ssl/private/privkey.pem
 
-# Nginx configuration to use SSL
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy the Nginx template configuration file
+COPY nginx.conf.template /etc/nginx/nginx.conf.template
+
+# Use envsubst to create the final Nginx configuration based on the environment variable
+CMD ["/bin/sh", "-c", "envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"]
 
 EXPOSE 80
 EXPOSE 443

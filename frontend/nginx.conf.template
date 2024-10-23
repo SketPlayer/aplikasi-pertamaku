@@ -5,14 +5,22 @@ server {
     ssl_certificate /etc/ssl/certs/fullchain.pem;
     ssl_certificate_key /etc/ssl/private/privkey.pem;
 
+    # Serve frontend files for the subdomain
+    location /${SUBDOMAIN}/ {
+        alias /usr/share/nginx/html/;  # Alias to frontend files
+        index index.html;
+        try_files $uri $uri/ /index.html;  # Handle SPA routing for the subdomain
+    }
+
+    # Serve frontend for root path
     location / {
         root /usr/share/nginx/html;  # Serve frontend files
         index index.html;
-        try_files $uri $uri/ /index.html;  # Handle SPA routing
+        try_files $uri $uri/ /index.html;  # Handle SPA routing for root
     }
 
     location /api/ {
-        proxy_pass http://20.5.130.115:3000;
+        proxy_pass http://backend:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
